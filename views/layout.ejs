@@ -10,7 +10,8 @@
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 
 		<!-- Custom styles for this template -->
-    	<link href="../css/sticky-footer-navbar.css" rel="stylesheet">
+    	<link href="/css/sticky-footer-navbar.css" rel="stylesheet">
+    	<link href="/css/style.css" rel="stylesheet">
 
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,13 +33,13 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/" title="El portal donde puedes crear tus propios juegos">
-          		<img src="../favicon.ico" />Quiz	
+          		<img src="/favicon.ico" />Quiz	
           </a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="/">Inicio</a></li>
-            <li><a href="/quizes/question">Preguntas</a></li>
+            <li><a href="/quizes">Preguntas</a></li>
             <li><a href="/author">Créditos</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -48,9 +49,8 @@
 	    <!-- Begin page content -->
 	    <div class="container">
 	      <div class="page-header">
-	        <h1><%= title %></h1>
+	        <h1><%= title %><span><%= description %></span></h1>
 	      </div>
-	      <p class="lead">El portal donde puedes crear tus propios juegos</p>
 	    </div>
 		
 		<div class="container">
@@ -58,6 +58,21 @@
 			<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">		
 				<%- body -%>
 			</div >
+			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+			
+			<%
+			if (typeof quizes !== 'undefined' && quizes.length > 1) {
+			%>
+				<form action="/quizes/search" method="POST" class="form-inline" role="form">
+					<div class="form-group  form-inline">
+						<input type="text" class="form-control" name="search" placeholder="Busqueda de preguntas"> <button type="submit" class="btn btn-primary">Buscar</button>
+					</div>	
+				</form>
+			<%
+			}
+			%>
+			</div >
+			
 		</div>	
 
 	    <footer class="footer">
