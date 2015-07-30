@@ -1,10 +1,12 @@
+<%
+for (var i = quizes.length - 1; i >= 0; i--) {
+%>
+	<form action="/quizes/<%=quizes[i].id%>/answer" method="POST" role="form">
+		<legend><span><a href="/quizes/<%=quizes[i].id%>">#<%=quizes[i].id%></a></span> <%= quizes[i].preguntas %></legend>
+	
+		<div class="form-group form-inline">
+			<input type="text" class="form-control" name="answer" placeholder="responde aquí" required> <button type="submit" class="btn btn-primary">Enviar</button>
+		</div>
+	</form>
 
-				<form action="answer" method="GET" role="form">
-					<legend>Pregunta: <%= question %></legend>
-				
-					<div class="form-group">
-						<input type="text" class="form-control" name="answer" placeholder="reponde aquí" required>
-					</div>
-				
-					<button type="submit" class="btn btn-primary">Enviar</button>
-				</form>
+<% } %>

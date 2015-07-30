@@ -1,7 +1,9 @@
-<div>
-	<h2><%= feedback %></h2>
+<% if (feedback == "OK"){ %> 
+<div class="alert alert-success"><p><strong><%=respuesta%></strong> es correcto </p></div>
+<% } else { %>
+<div class="alert alert-danger"><p><strong><%=respuesta%></strong> no es correcto </p></div>
+<% } %>
 
-	<p class="navbar-text pull-right">
-		<a href="/" class="navbar-link">Volver a la página inicial</a>
-	</p>
-</div>
+<p class="navbar-text pull-right">
+	<a href="/quizes" class="navbar-link">Volver a la página inicial</a>
+</p>
