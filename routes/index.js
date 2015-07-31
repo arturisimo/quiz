@@ -9,6 +9,9 @@ router.param('id', controller.load);
 
 router.get('/', controller.index);
 router.get('/quizes', controller.quizes);
+router.get('/quizes/add', controller.create);
+router.get('/quizes/:id(\\d+)/update', controller.update);
+router.post('/quizes/insert', controller.insert);
 router.get('/quizes/:id(\\d+)', controller.quiz);
 router.post('/quizes/search', controller.search);
 router.post('/quizes/:id(\\d+)/answer', controller.answer);

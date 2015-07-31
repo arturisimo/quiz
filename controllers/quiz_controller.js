@@ -27,10 +27,59 @@ exports.quiz = function(request, response){
 	response.render('quizes/question', {title: 'Pregunta #' +  request.quiz.id, description: 'Prueba tus conocimientos', quizes: [request.quiz], file: 'quizes/question'});
 }
 
+exports.create = function(request, response){
+	var quiz = {id: "", preguntas:"", respuestas:"", tematica: ""};
+	response.render('quizes/add', {title: 'Nueva Pregunta', description: 'Añade una nueva pregunta', quiz: quiz, file: 'quizes/add'});
+}
+
+exports.update = function(request, response){
+	var quiz = request.quiz;
+	response.render('quizes/add', {title: 'Modificación de la pregunta ' +  quiz.id, description: 'Añade una nueva pregunta', quiz: quiz, file: 'quizes/add'});
+}
+
+exports.insert = function(request, response){
+	var id = request.body.id;
+	var preguntas = request.body.preguntas;
+	var respuestas = request.body.respuestas;
+	var tematica = request.body.tematica;
+	//var post =  {id: id , preguntas: preguntas, respuestas:respuestas, tematica: tematica};
+	//console.log(quiz);
+	if(id != ''){
+		var post =  {id: id , preguntas: preguntas, respuestas:respuestas, tematica: tematica};
+		var quiz = models.Quiz.build(post);
+		quiz.updateAttributes({preguntas: preguntas, respuestas:respuestas, tematica: tematica}).then(function(){
+			response.redirect('/');
+		}).catch(function(error){next(error)});
+	} else {
+		var quiz = models.Quiz.build({preguntas: preguntas, respuestas:respuestas, tematica: tematica});
+		quiz.save().then(function(){
+			response.redirect('/');
+		}).catch(function(error){next(error)});
+	}
+	
+}
+
 exports.search = function(request, response,  next){
 	var search = request.body.search;
-	models.Quiz.findAll({where: ["lower(preguntas) like '%" + search.toLowerCase() + "%'"]}).then(function(quizes){
-		response.render('quizes/question', {title: 'Preguntas "' + search + '"', description: quizes.length > 0  ? 'Prueba tus conocimientos' : 'no hay preguntas con este criterio', quizes: quizes, file: 'quizes/question'});
+	var tematica = request.body.tematica;
+	var where = "";
+	var criterio = "";
+	if (tematica!=''){
+		where = where + "tematica = '" + tematica + "'";
+		criterio = criterio + " Temática: " + tematica;
+	}
+	if (search!=''){
+		if(where!=''){
+			where = where + " and "
+		}
+		where = where + "lower(preguntas) like '%" + search.toLowerCase() + "%";
+		criterio = criterio + " Busqueda: '" + search + "'";
+	}
+
+	//var where = "lower(preguntas) like '%" + search.toLowerCase() + "%";
+	
+	models.Quiz.findAll({where: [where]}).then(function(quizes){
+		response.render('quizes/question', {title: 'Preguntas ' + criterio, description: quizes.length > 0  ? 'Prueba tus conocimientos' : 'no hay preguntas con este criterio', quizes: quizes, file: 'quizes/question'});
 	}).catch(function(error){next(error)});
 
 }

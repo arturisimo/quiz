@@ -1,0 +1,26 @@
+<form action="/quizes/insert" method="POST" role="form">
+	<input type="hidden" name="id" placeholder="Input field" value="<%=quiz.id%>">
+
+	<div class="form-group">
+		<label for="">Pregunta</label>
+		<input type="text" class="form-control" name="preguntas" placeholder="Input field" value="<%=quiz.preguntas%>">
+	</div>
+	
+	<div class="form-group">
+		<label for="">Respuesta</label>
+		<input type="text" class="form-control" name="respuestas" placeholder="Input field" value="<%=quiz.respuestas%>" >
+	</div>
+	
+	<div class="form-group">
+		<label for="">Temática</label>
+		<select name="tematica" class="form-control">
+		  <option value="otro" selected>Otro</option>
+		  <option value="humanidades">Humanidades</option>
+		  <option value="ocio">Ocio</option>
+		  <option value="ciencia">Ciencia</option>
+		  <option value="tecnologia">Tecnología</option>
+		</select>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Enviar</button>
+</form>

@@ -2,7 +2,7 @@
 for (var i = quizes.length - 1; i >= 0; i--) {
 %>
 	<form action="/quizes/<%=quizes[i].id%>/answer" method="POST" role="form">
-		<legend><span><a href="/quizes/<%=quizes[i].id%>">#<%=quizes[i].id%></a></span> <%= quizes[i].preguntas %></legend>
+		<legend><span><a href="/quizes/<%=quizes[i].id%>">#<%=quizes[i].id%></a></span> <%= quizes[i].preguntas %><span class='tematica'><%= quizes[i].tematica %><span></legend>
 	
 		<div class="form-group form-inline">
 			<input type="text" class="form-control" name="answer" placeholder="responde aquí" required> <button type="submit" class="btn btn-primary">Enviar</button>
