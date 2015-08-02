@@ -30,11 +30,13 @@ app.use(partials());
 app.use('/', routes);
 
 // catch 404 and forward to error handler
+/*
 app.use(function(req, res, next) {
   var err = new Error('Not Found!!');
   err.status = 404;
+  err.message="Error 404";
   next(err);
-});
+});*/
 
 // error handlers
 
@@ -48,7 +50,8 @@ if (app.get('env') === 'development') {
       description: "Ooops ha habido un fallo técnico!",
       file: 'error',
       message: err.message,
-      error: err
+      error: err,
+      classMenu: { index:false, quiz: false, author:false }
     });
   });
 }

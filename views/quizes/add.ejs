@@ -3,18 +3,19 @@
 
 	<div class="form-group">
 		<label for="">Pregunta</label>
-		<input type="text" class="form-control" name="preguntas" placeholder="Input field" value="<%=quiz.preguntas%>">
+		<input type="text" class="form-control" name="preguntas" placeholder="Nueva pregunta" value="<%=quiz.preguntas%>">
 	</div>
 	
 	<div class="form-group">
 		<label for="">Respuesta</label>
-		<input type="text" class="form-control" name="respuestas" placeholder="Input field" value="<%=quiz.respuestas%>" >
+		<input type="text" class="form-control" name="respuestas" placeholder="Aquí la respuesta" value="<%=quiz.respuestas%>" >
 	</div>
 	
 	<div class="form-group">
 		<label for="">Temática</label>
 		<select name="tematica" class="form-control">
-		  <option value="otro" selected>Otro</option>
+		  <option value="" selected>Selecciona una temática...</option>
+		  <option value="otro" >Otro</option>
 		  <option value="humanidades">Humanidades</option>
 		  <option value="ocio">Ocio</option>
 		  <option value="ciencia">Ciencia</option>
