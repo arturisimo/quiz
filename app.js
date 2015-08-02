@@ -29,17 +29,6 @@ app.use(partials());
 //asociar rutas a los gestores
 app.use('/', routes);
 
-// catch 404 and forward to error handler
-/*
-app.use(function(req, res, next) {
-  var err = new Error('Not Found!!');
-  err.status = 404;
-  err.message="Error 404";
-  next(err);
-});*/
-
-// error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
@@ -62,8 +51,12 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
-    message: err.message,
-    error: {}
+      title: "Error",
+      description: "Ooops ha habido un fallo técnico!",
+      file: 'error',
+      message: err.message,
+      error: err,
+      classMenu: { index:false, quiz: false, author:false }
   });
 });
 
