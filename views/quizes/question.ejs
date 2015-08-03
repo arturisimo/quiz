@@ -1,6 +1,4 @@
-<%
-for (var i = quizes.length - 1; i >= 0; i--) {
-%>
+<% for (var i = quizes.length - 1; i >= 0; i--) { %>
 	<form action="/quizes/<%=quizes[i].id%>/answer" method="POST" role="form">
 		<legend><span><a href="/quizes/<%=quizes[i].id%>">#<%=quizes[i].id%></a></span> <%= quizes[i].preguntas %><span class='tematica'><%= quizes[i].tematica %><span></legend>
 	
@@ -11,8 +9,25 @@ for (var i = quizes.length - 1; i >= 0; i--) {
 			<a href="/quizes/<%=quizes[i].id%>/delete" class="btn btn-default">Eliminar</a>
 		</div>
 	</form>
+	
+	<%  if(comments.length>0) {
+			for (var j = comments.length - 1; j >= 0; j--) { %>
 
-<% } %>
+				<div class="comentario" name="comentario<%= comments[j].id%>">
+					<legend>
+					<%  if(comments[j].site) { %>
+					<a href="<%= comments[j].site %>"><%= comments[j].nombre %></a>
+					<%	} else { %>
+					<%= comments[j].nombre %>
+					<%	} %>
+					<span class="tematica"><a href="#comentario<%= comments[j].id%>">#<%=comments[j].id%></a> <%= comments[j].createdAt%></span>
+					</legend>
+					<p><%= comments[j].comentario %></p>
+				</div>
+<%	 		}
+		} 
+ } %>
+
 <div class="add">
 	<a href="/quizes/add" class="btn btn-danger">Nueva pregunta</a>
 </div>

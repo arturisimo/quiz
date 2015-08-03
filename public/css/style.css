@@ -26,3 +26,10 @@ body > .container {
 	margin-top: 40px;
 	text-align: center;
 }
+.comentario legend{
+	font-size: 15px;
+	margin-bottom: 5px;
+}
+.comentario p{
+	font-size: 12px;
+}

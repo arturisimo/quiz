@@ -38,7 +38,12 @@ exports.notfound = function(request, response) {
 //list quiz
 exports.quizes = function(request, response, next){
 	
-	var data = { title: 'Preguntas', description: 'Prueba tus conocimientos', file: 'quizes/question', classMenu: { index:false, quiz: true, author:false }};
+	var data = { title: 'Preguntas', 
+				 description: 'Prueba tus conocimientos', 
+				 file: 'quizes/question', 
+				 classMenu: { index:false, quiz: true, author:false },
+				 comments:[]
+				};
 	
 	models.Quiz.findAll().then(function(quizes){
 		data.quizes = quizes; 
@@ -55,6 +60,7 @@ exports.search = function(request, response,  next){
 		response.render('quizes/question', { title: 'Preguntas ' + criterio, 
 											 description: quizes.length > 0  ? 'Prueba tus conocimientos' : 'no hay preguntas con este criterio', 
 											 quizes: quizes, 
+											 comments: [],
 											 file: 'quizes/question', 
 											 classMenu: { index:false, quiz: true, author:false }});
 	}).catch(function(error){next(error)});
@@ -68,9 +74,14 @@ exports.quiz = function(request, response){
 				 description: 'Prueba tus conocimientos', 
 				 quizes: [request.quiz], 
 				 file: 'quizes/question',
+				 comments: [],
 				 classMenu: { index:false, quiz: true, author:false }
 				}
-	response.render('quizes/question', data);
+
+	models.Comment.findAll({order: [['id', 'DESC']], where: {quizId:request.quiz.id}}).then(function(comments){
+		data.comments = comments; 
+		response.render('quizes/question', data);
+	}).catch(function(error){next(error)});
 }
 
 //answer quiz
