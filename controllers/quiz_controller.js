@@ -1,5 +1,7 @@
 var models = require('../models/models.js');
 
+var temas = ["otro", "humanidades","ocio","ciencia","tecnologia"];
+
 exports.load = function(request, response, next, id){
 	models.Quiz.findById(id).then(function(quiz){
 		if(quiz){
@@ -11,11 +13,29 @@ exports.load = function(request, response, next, id){
 	}).catch(function(error){next(error)});
 }
 
+//welcome 
 exports.index = function(request, response){
-	 var data = {title: 'Bienvenid@ a Quiz', description: 'El portal donde puedes crear tus propios juegos', file: 'index', classMenu: { index:true, quiz: false, author:false }};
+	 var data = { title: 'Bienvenid@ a Quiz', description: 'El portal donde puedes crear tus propios juegos', file: 'index', classMenu: { index:true, quiz: false, author:false }};
 	 response.render('', data);
 }
+//author
+exports.author = function(request, response){
+	response.render('author', { title: 'Bienvenid@ a Quiz', 
+								description: 'by arturo', 
+								file: 'author', 
+								classMenu: { index:false, quiz: false, author:true } });
+}
+//error 404
+exports.notfound = function(request, response) {
+	response.render('error', { title: 'ERROR 404', 
+							   description: 'Página no encontrada', 
+							   message:'',
+							   error:'', 
+							   file : 'error', 
+							   classMenu: { index:false, quiz: false, author:false }});
+}
 
+//list quiz
 exports.quizes = function(request, response, next){
 	
 	var data = { title: 'Preguntas', description: 'Prueba tus conocimientos', file: 'quizes/question', classMenu: { index:false, quiz: true, author:false }};
@@ -26,6 +46,22 @@ exports.quizes = function(request, response, next){
 	}).catch(function(error){next(error)});
 }
 
+//list quiz by search
+exports.search = function(request, response,  next){
+	var search = request.body.search;
+	var where = "lower(preguntas) like '%" + search.toLowerCase() + "%'";
+	var criterio = " Busqueda: '" + search + "'";
+	models.Quiz.findAll({order: [['preguntas', 'DESC']], where: [where]}).then(function(quizes){
+		response.render('quizes/question', { title: 'Preguntas ' + criterio, 
+											 description: quizes.length > 0  ? 'Prueba tus conocimientos' : 'no hay preguntas con este criterio', 
+											 quizes: quizes, 
+											 file: 'quizes/question', 
+											 classMenu: { index:false, quiz: true, author:false }});
+	}).catch(function(error){next(error)});
+
+}
+
+//quiz
 exports.quiz = function(request, response){
 	var quizes = new Array(request.quiz);
 	var data = { title: 'Pregunta #' +  request.quiz.id, 
@@ -37,64 +73,7 @@ exports.quiz = function(request, response){
 	response.render('quizes/question', data);
 }
 
-exports.create = function(request, response){
-	var quiz = {id: "", preguntas:"", respuestas:"", tematica: ""};
-	response.render('quizes/add', {title: 'Nueva Pregunta', description: 'Añade una nueva pregunta', quiz: quiz, file: 'quizes/add', classMenu: { index:false, quiz: true, author:false }});
-}
-
-exports.update = function(request, response){
-	var quiz = request.quiz;
-	response.render('quizes/add', {title: 'Modificación de la pregunta ' +  quiz.id, description: 'Añade una nueva pregunta', quiz: quiz, file: 'quizes/add', classMenu: { index:false, quiz: true, author:false }});
-}
-
-exports.edit = function(request, response){
-		
-}
-
-exports.insert = function(request, response){
-	var id = request.body.id;
-	var preguntas = request.body.preguntas;
-	var respuestas = request.body.respuestas;
-	var tematica = request.body.tematica;
-
-	if(id!=''){
-		models.Quiz.findById(id).then(function(quiz){
-			if(quiz){
-				quiz.preguntas = preguntas;
-				quiz.respuestas = respuestas;
-				quiz.tematica = tematica;
-
-				quiz.save({fields: ["preguntas", "respuestas", "tematica"]}).then(function(){
-					response.redirect('/quizes');
-				})
-			}
-		});
-	} else {
-
-		var quiz = models.Quiz.build({preguntas: preguntas, respuestas:respuestas, tematica: tematica});
-		quiz.save().then(function(){
-			response.redirect('/quizes');
-		}).catch(function(error){next(error)});
-	}
-	
-}
-
-exports.delete = function(request, response){
-		request.quiz.destroy().then(function(){
-			response.redirect('/quizes');
-		}).catch(function(error){next(error)});
-}
-
-exports.search = function(request, response,  next){
-	var search = request.body.search;
-	var where = "lower(preguntas) like '%" + search.toLowerCase() + "%'";
-	var criterio = " Busqueda: '" + search + "'";
-	models.Quiz.findAll({order: [['preguntas', 'DESC']], where: [where]}).then(function(quizes){
-		response.render('quizes/question', {title: 'Preguntas ' + criterio, description: quizes.length > 0  ? 'Prueba tus conocimientos' : 'no hay preguntas con este criterio', quizes: quizes, file: 'quizes/question', classMenu: { index:false, quiz: true, author:false }});
-	}).catch(function(error){next(error)});
-
-}
-
+//answer quiz
 exports.answer = function(request, response){
 
 	var answer = request.body.answer;
@@ -109,11 +88,93 @@ exports.answer = function(request, response){
 									   classMenu: { index:false, quiz: true, author:false }});
 }
 
-exports.author = function(request, response){
-	response.render('author', { title: 'Bienvenid@ a Quiz', description: 'by arturo', file: 'author', classMenu: { index:false, quiz: false, author:true } });
+/*
+ * ADMIN CONTROLLERS
+ */
+
+
+//add quiz
+exports.create = function(request, response){
+	var quiz = {id: "", preguntas:"", respuestas:"", tematica: ""};
+	response.render('quizes/add', { title: 'Nueva Pregunta', 
+									description: '', 
+									quiz: quiz, 
+									errors:[],
+									temas: temas,
+									file: 'quizes/add', 
+									classMenu: { index:false, quiz: true, author:false }});
 }
 
+//edit quiz
+exports.update = function(request, response){
+	var quiz = request.quiz;
+	response.render('quizes/add', { title: 'Modificación de la pregunta ' +  quiz.id, 
+									description: '', 
+									quiz: quiz, 
+									errors:[],
+									temas: temas,
+									file: 'quizes/add', 
+									classMenu: { index:false, quiz: true, author:false }});
+}
 
-exports.error = function(request, response) {
-	response.render('error', { title: 'ERROR 404', description: '', message:'Página no encontrada', file : 'error', classMenu: { index:false, quiz: false, author:false }});
+//insert quiz / update quiz
+exports.insert = function(request, response){
+	var id = request.body.id;
+	var preguntas = request.body.preguntas;
+	var respuestas = request.body.respuestas;
+	var tematica = request.body.tematica;
+
+	//update quiz
+	if(id!=''){
+		models.Quiz.findById(id).then(function(quiz){
+			if(quiz){
+				quiz.preguntas = preguntas;
+				quiz.respuestas = respuestas;
+				quiz.tematica = tematica;
+
+				quiz.validate().then(function(err) {
+					if(err) {
+						response.render("quizes/add", { title: 'Modificación de la pregunta ' +  quiz.id, 
+												   description: '', 
+												   quiz: quiz, 
+												   errors:err.errors,
+												   temas: temas,
+												   file: 'quizes/add', 
+												   classMenu: { index:false, quiz: true, author:false }});
+					} else {
+						quiz.save({fields: ["preguntas", "respuestas", "tematica"]}).then(function(){
+							response.redirect('/quizes');
+						}).catch(function(error){next(error)});
+					}
+				});
+			}
+		});
+	} else {
+		//add quiz	
+		var quiz = models.Quiz.build({preguntas: preguntas, respuestas:respuestas, tematica: tematica});
+
+		quiz.validate().then(function(err) {
+			if(err) {
+				response.render("quizes/add", { title: 'Nueva pregunta ', 
+										   description: '', 
+										   quiz: quiz, 
+										   errors:err.errors,
+										   temas: temas,
+										   file: 'quizes/add', 
+										   classMenu: { index:false, quiz: true, author:false }});
+			} else {
+				quiz.save().then(function(){
+					response.redirect('/quizes');
+				}).catch(function(error){next(error)});
+			}
+		});
+	}
+	
+}
+
+//delete quiz
+exports.delete = function(request, response){
+	request.quiz.destroy().then(function(){
+		response.redirect('/quizes');
+	}).catch(function(error){next(error)});
 }

@@ -1,8 +1,30 @@
 // model definition
 module.exports = function(sequelize, Datatypes) {
     return sequelize.define('quiz', {
-		    preguntas: Datatypes.STRING,
-		    respuestas: Datatypes.STRING,
-		    tematica: Datatypes.STRING
+		    preguntas: {
+		    	type: Datatypes.STRING,
+		    	validate: {
+					notEmpty: {
+							msg: "Falta pregunta"
+					}
+				}
+			},		
+		    respuestas: {
+		    	type: Datatypes.STRING,
+		    	validate: {
+					notEmpty: {
+							msg: "Falta respuesta"
+					}
+				}
+			},
+		    tematica: {
+		    	type: Datatypes.STRING,
+		    	validate: {
+					notEmpty: {
+							msg: "Falta temática"
+					}
+				}
+			}
 	});
 }
+
