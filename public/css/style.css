@@ -17,3 +17,12 @@ body > .container {
 .page-header {
 	margin: 0px;
 }
+.tematica{
+	font-size: 12px;
+	color: gray;
+	float:right;
+}
+.add{
+	margin-top: 40px;
+	text-align: center;
+}
