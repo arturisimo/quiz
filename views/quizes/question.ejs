@@ -28,6 +28,26 @@
 		} 
  } %>
 
+<div class="add-comentario" >
+<form action="/quizes/<%= quizes[0].id %>/comments/insert" method="POST" role="form">
+	<legend>Añadir un comentario</legend>
+
+	<div class="form-group">
+		<label for="">Nombre</label>
+		<input type="text" class="form-control" name="nombre" placeholder="Nombre"> 
+	</div>
+	<div class="form-group">
+		<label for="">Página web</label>
+		<input type="text" class="form-control" name="site" placeholder="Página web"> 
+	</div>
+	<div class="form-group">
+		<label for="">Comentario</label>
+		<textarea name="comentario"  class="form-control" rows="3" required="required"></textarea>
+	</div>
+	<button type="submit" class="btn btn-primary">Enviar</button>
+</form>
+</div>
+
 <div class="add">
 	<a href="/quizes/add" class="btn btn-danger">Nueva pregunta</a>
 </div>

@@ -33,3 +33,15 @@ body > .container {
 .comentario p{
 	font-size: 12px;
 }
+.add-comentario legend{
+	font-size: 20px;
+	margin-bottom: 5px;	
+	border-style: none;
+}
+.add-comentario {
+	width: 70%;
+	background-color: #f8f8f8;
+	border:1px solid #e7e7e7;
+	padding:15px;
+	font-size: 12px;
+}
