@@ -115,91 +115,106 @@ exports.answer = function(request, response){
 
 
 //add quiz
-exports.create = function(request, response){
-	var quiz = {id: "", preguntas:"", respuestas:"", tematica: ""};
-	response.render('quizes/add', { title: 'Nueva Pregunta', 
-									description: '', 
-									quiz: quiz, 
-									errors:[],
-									usuario_sesion: request.session.user,
-									temas: temas,
-									file: 'quizes/add', 
-									classMenu: { index:false, quiz: true, author:false }});
+exports.create = function(request, response, next ){
+	if(request.session.user){
+		var quiz = {id: "", preguntas:"", respuestas:"", tematica: ""};
+		response.render('quizes/add', { title: 'Nueva Pregunta', 
+										description: '', 
+										quiz: quiz, 
+										errors:[],
+										usuario_sesion: request.session.user,
+										temas: temas,
+										file: 'quizes/add', 
+										classMenu: { index:false, quiz: true, author:false }});
+	} else {
+			next("No tienes permisos");
+	}
 }
 
 //edit quiz
-exports.update = function(request, response){
-	var quiz = request.quiz;
-	response.render('quizes/add', { title: 'Modificación de la pregunta ' +  quiz.id, 
-									description: '', 
-									quiz: quiz, 
-									errors:[],
-									usuario_sesion: request.session.user,
-									temas: temas,
-									file: 'quizes/add', 
-									classMenu: { index:false, quiz: true, author:false }});
+exports.update = function(request, response, next){
+	if(request.session.user){
+		var quiz = request.quiz;
+		response.render('quizes/add', { title: 'Modificación de la pregunta ' +  quiz.id, 
+										description: '', 
+										quiz: quiz, 
+										errors:[],
+										usuario_sesion: request.session.user,
+										temas: temas,
+										file: 'quizes/add', 
+										classMenu: { index:false, quiz: true, author:false }});
+	} else {
+			next("No tienes permisos");
+	}	
 }
 
 //insert quiz / update quiz
-exports.insert = function(request, response){
-	var id = request.body.id;
-	var preguntas = request.body.preguntas;
-	var respuestas = request.body.respuestas;
-	var tematica = request.body.tematica;
+exports.insert = function(request, response, next){
+	if(request.session.user){
+		var id = request.body.id;
+		var preguntas = request.body.preguntas;
+		var respuestas = request.body.respuestas;
+		var tematica = request.body.tematica;
 
-	//update quiz
-	if(id!=''){
-		models.Quiz.findById(id).then(function(quiz){
-			if(quiz){
-				quiz.preguntas = preguntas;
-				quiz.respuestas = respuestas;
-				quiz.tematica = tematica;
+		//update quiz
+		if(id!=''){
+			models.Quiz.findById(id).then(function(quiz){
+				if(quiz){
+					quiz.preguntas = preguntas;
+					quiz.respuestas = respuestas;
+					quiz.tematica = tematica;
 
-				quiz.validate().then(function(err) {
-					if(err) {
-						response.render("quizes/add", { title: 'Modificación de la pregunta ' +  quiz.id, 
-												   description: '', 
-												   quiz: quiz, 
-												   errors:err.errors,
-												   temas: temas,
-												   usuario_sesion: request.session.user,
-												   file: 'quizes/add', 
-												   classMenu: { index:false, quiz: true, author:false }});
-					} else {
-						quiz.save({fields: ["preguntas", "respuestas", "tematica"]}).then(function(){
-							response.redirect('/quizes');
-						}).catch(function(error){next(error)});
-					}
-				});
-			}
-		});
+					quiz.validate().then(function(err) {
+						if(err) {
+							response.render("quizes/add", { title: 'Modificación de la pregunta ' +  quiz.id, 
+													   description: '', 
+													   quiz: quiz, 
+													   errors:err.errors,
+													   temas: temas,
+													   usuario_sesion: request.session.user,
+													   file: 'quizes/add', 
+													   classMenu: { index:false, quiz: true, author:false }});
+						} else {
+							quiz.save({fields: ["preguntas", "respuestas", "tematica"]}).then(function(){
+								response.redirect('/quizes');
+							}).catch(function(error){next(error)});
+						}
+					});
+				}
+			});
+		} else {
+			//add quiz	
+			var quiz = models.Quiz.build({preguntas: preguntas, respuestas:respuestas, tematica: tematica});
+
+			quiz.validate().then(function(err) {
+				if(err) {
+					response.render("quizes/add", { title: 'Nueva pregunta ', 
+											   description: '', 
+											   quiz: quiz, 
+											   errors:err.errors,
+											   temas: temas,
+											   usuario_sesion: request.session.user,
+											   file: 'quizes/add', 
+											   classMenu: { index:false, quiz: true, author:false }});
+				} else {
+					quiz.save().then(function(){
+						response.redirect('/quizes');
+					}).catch(function(error){next(error)});
+				}
+			});
+		}
 	} else {
-		//add quiz	
-		var quiz = models.Quiz.build({preguntas: preguntas, respuestas:respuestas, tematica: tematica});
-
-		quiz.validate().then(function(err) {
-			if(err) {
-				response.render("quizes/add", { title: 'Nueva pregunta ', 
-										   description: '', 
-										   quiz: quiz, 
-										   errors:err.errors,
-										   temas: temas,
-										   usuario_sesion: request.session.user,
-										   file: 'quizes/add', 
-										   classMenu: { index:false, quiz: true, author:false }});
-			} else {
-				quiz.save().then(function(){
-					response.redirect('/quizes');
-				}).catch(function(error){next(error)});
-			}
-		});
+			next("No tienes permisos");
 	}
-	
 }
 
 //delete quiz
-exports.delete = function(request, response){
-	request.quiz.destroy().then(function(){
-		response.redirect('/quizes');
-	}).catch(function(error){next(error)});
+exports.delete = function(request, response, next){
+	if(request.session.user){
+		request.quiz.destroy().then(function(){
+			response.redirect('/quizes');
+		}).catch(function(error){next(error)});
+	} else {
+			next("No tienes permisos");
+	}	
 }

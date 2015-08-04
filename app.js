@@ -41,6 +41,7 @@ if (app.get('env') === 'development') {
       description: "Ooops ha habido un fallo técnico!",
       file: 'error',
       message: err.message,
+      usuario_sesion: request.session.user,
       error: err,
       classMenu: { index:false, quiz: false, author:false }
     });
