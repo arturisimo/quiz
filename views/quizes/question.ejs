@@ -1,53 +1,46 @@
-<% for (var i = quizes.length - 1; i >= 0; i--) { %>
-	<form action="/quizes/<%=quizes[i].id%>/answer" method="POST" role="form">
-		<legend><span><a href="/quizes/<%=quizes[i].id%>">#<%=quizes[i].id%></a></span> <%= quizes[i].preguntas %><span class='tematica'><%= quizes[i].tematica %><span></legend>
+	<form action="/quizes/<%=quiz.id%>/answer" method="POST" role="form">
+		<legend><span><a href="/quizes/<%=quiz.id%>">#<%=quiz.id%></a></span> <%= quiz.preguntas %><span class='tematica'><%= quiz.tematica %><span></legend>
 	
 		<div class="form-group form-inline">
 			<input type="text" class="form-control" name="answer" placeholder="responde aquí" required> 
 			<button type="submit" class="btn btn-primary">Enviar</button>
-			<a href="/quizes/<%=quizes[i].id%>/update" class="btn btn-default">Modificar</a>
-			<a href="/quizes/<%=quizes[i].id%>/delete" class="btn btn-default">Eliminar</a>
 		</div>
 	</form>
 	
 	<%  if(comments.length>0) {
-			for (var j = comments.length - 1; j >= 0; j--) { %>
+			for (var i = comments.length - 1; i >= 0; i--) { %>
 
-				<div class="comentario" name="comentario<%= comments[j].id%>">
+				<div class="comentario" name="comentario<%= comments[i].id%>">
 					<legend>
-					<%  if(comments[j].site) { %>
-					<a href="<%= comments[j].site %>"><%= comments[j].nombre %></a>
+					<%  if(comments[i].site) { %>
+					<a href="<%= comments[i].site %>"><%= comments[i].nombre %></a>
 					<%	} else { %>
-					<%= comments[j].nombre %>
+					<%= comments[i].nombre %>
 					<%	} %>
-					<span class="tematica"><a href="#comentario<%= comments[j].id%>">#<%=comments[j].id%></a> <%= comments[j].createdAt%></span>
+					<span class="tematica"><a href="#comentario<%= comments[i].id%>">#<%=comments[i].id%></a> <%= comments[i].createdAt%></span>
 					</legend>
-					<p><%= comments[j].comentario %></p>
+					<p><%= comments[i].comentario %></p>
 				</div>
 <%	 		}
 		} 
- } %>
+%>
 
 <div class="add-comentario" >
-<form action="/quizes/<%= quizes[0].id %>/comments/insert" method="POST" role="form">
-	<legend>Añadir un comentario</legend>
+	<form action="/quizes/<%= quiz.id %>/comments/insert" method="POST" role="form">
+		<legend>Añadir un comentario</legend>
 
-	<div class="form-group">
-		<label for="">Nombre</label>
-		<input type="text" class="form-control" name="nombre" placeholder="Nombre"> 
-	</div>
-	<div class="form-group">
-		<label for="">Página web</label>
-		<input type="text" class="form-control" name="site" placeholder="Página web"> 
-	</div>
-	<div class="form-group">
-		<label for="">Comentario</label>
-		<textarea name="comentario"  class="form-control" rows="3" required="required"></textarea>
-	</div>
-	<button type="submit" class="btn btn-primary">Enviar</button>
-</form>
-</div>
-
-<div class="add">
-	<a href="/quizes/add" class="btn btn-danger">Nueva pregunta</a>
+		<div class="form-group">
+			<label for="">Nombre</label>
+			<input type="text" class="form-control" name="nombre" placeholder="Nombre"> 
+		</div>
+		<div class="form-group">
+			<label for="">Página web</label>
+			<input type="text" class="form-control" name="site" placeholder="Página web"> 
+		</div>
+		<div class="form-group">
+			<label for="">Comentario</label>
+			<textarea name="comentario"  class="form-control" rows="3" required="required"></textarea>
+		</div>
+		<button type="submit" class="btn btn-primary">Enviar</button>
+	</form>
 </div>

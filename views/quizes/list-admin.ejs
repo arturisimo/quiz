@@ -1,0 +1,23 @@
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>id</th><th>Pregunta</th><th>Respuesta</th><th>Temática</th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% for (var i = quizes.length - 1; i >= 0; i--) { %>
+		<tr>
+			<td><%=quizes[i].id%></td><td><%=quizes[i].preguntas%></td><td><%=quizes[i].respuestas%></td><td><%=quizes[i].tematica%></td>
+			<td><a href="/quizes/<%=quizes[i].id%>" class="glyphicon glyphicon-zoom-in" title="Consultar"></a>
+				<a href="/quizes/<%=quizes[i].id%>/update" class="glyphicon glyphicon-edit" title="Eliminar"></a>
+				<a href="/quizes/<%=quizes[i].id%>/delete" class="glyphicon glyphicon-remove" title="Modificar"></a>
+			</td>
+		</tr>
+		<%	} %>
+	</tbody>
+</table>
+
+<div class="add">
+	<a href="/quizes/add" class="btn btn-danger">Nueva pregunta</a>
+</div>
+

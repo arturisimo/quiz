@@ -45,3 +45,18 @@ body > .container {
 	padding:15px;
 	font-size: 12px;
 }
+.login{
+	width: 20%;
+}
+.login button{
+	margin-top: 20px;
+}
+table a{
+	color: #777;
+	padding: 0px 3px;
+	font-size: 17px;
+}
+table a:hover{
+	color: #333;
+	text-decoration: none;
+}

@@ -4,6 +4,8 @@ var router = express.Router();
 //importar routes
 var controller = require('../controllers/quiz_controller');
 var comment_controller = require('../controllers/comment_controller');
+var session_controller = require('../controllers/session_controller');
+var user_controller = require('../controllers/user_controller');
 
 
 router.param('id', controller.load);
@@ -19,10 +21,13 @@ router.post('/quizes/insert', controller.insert);
 router.post('/quizes/:id(\\d+)/answer', controller.answer);
 router.get('/author', controller.author);
 
-
-router.get('/quizes/:id(\\d+)/comments/add', comment_controller.create);
 router.post('/quizes/:id(\\d+)/comments/insert', comment_controller.insert);
 
+router.get('/login', session_controller.login);
+router.post('/init', session_controller.create);
+router.get('/logout', session_controller.logout);
+
+router.get('/user/:id(\\d+)', user_controller.user);
 
 
 router.get('*', controller.notfound);

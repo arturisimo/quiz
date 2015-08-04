@@ -42,7 +42,25 @@
             <li class="<%= classMenu.quiz ?  'active':''%>"><a href="/quizes">Preguntas</a></li>
             <li class="<%= classMenu.author ?  'active':''%>"><a  href="/author">Créditos</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+			
+		  <% if (typeof quizes !== 'undefined' && quizes.length > 1) { %>
+				<form action="/quizes/search" method="POST" class="navbar-form navbar-right" role="form">
+					<div class="form-group  form-inline">
+						<input type="text" class="form-control" name="search" placeholder="Busqueda de preguntas">
+						<button type="submit" class="btn btn-primary">Buscar</button>
+					</div>	
+				</form>
+		  <% } %>
+
+          <ul class="nav navbar-nav navbar-right">
+          	<% if(usuario_sesion){ %>
+          		<li><a href="/user/<%=usuario_sesion.id%>"><span class="glyphicon glyphicon-user"></span> <%= usuario_sesion.username%></a></li>
+				<li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Salir de la sesión</a></li>
+			<% } else { %>	
+				<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Iniciar sesión</a></li>
+			<% } %>	
+		  </ul>
+        </div>
       </div>
     </nav>
 
@@ -55,23 +73,8 @@
 		
 		<div class="container">
 			
-			<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">		
+			<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">		
 				<%- body -%>
-			</div >
-			<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-			
-			<%
-			if (typeof quizes !== 'undefined' && quizes.length > 1) {
-			%>
-				<form action="/quizes/search" method="POST" class="form-inline" role="form">
-					<div class="form-group  form-inline">
-						<input type="text" class="form-control" name="search" placeholder="Busqueda de preguntas">
-						<button type="submit" class="btn btn-primary">Buscar</button>
-					</div>	
-				</form>
-			<%
-			}
-			%>
 			</div >
 			
 		</div>	
