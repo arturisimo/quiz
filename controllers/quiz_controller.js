@@ -15,29 +15,53 @@ exports.load = function(request, response, next, id){
 
 //welcome 
 exports.index = function(request, response){
-	 var data = { title: 'Bienvenid@ a Quiz', 
-	 			  description: 'El portal donde puedes crear tus propios juegos', 
-	 			  file: 'index', 
-	 			  usuario_sesion: request.session.user,
-	 			  classMenu: { index:true, quiz: false, author:false }
-	 			};
-	 response.render('', data);
+
+	if(request.session.user){
+		response.redirect('comments');
+	} else {
+		var data = { title: 'Bienvenid@ a Quiz', 
+		 			  description: 'El portal donde puedes crear tus propios juegos', 
+		 			  comments:[],
+		 			  usuario_sesion: request.session.user,
+		 			  classMenu: { index:true, quiz: false, author:false }
+		 			};
+
+		response.render('', data);
+	}
 }
 //author
 exports.author = function(request, response){
 	response.render('author', { title: 'Bienvenid@ a Quiz', 
 								description: 'by arturo', 
-								file: 'author', 
 								usuario_sesion: request.session.user,
 								classMenu: { index:false, quiz: false, author:true } });
 }
+exports.doc = function(request, response, next){
+
+	var fs = require('fs');
+	var dir = './public/doc/';
+
+	fs.readdir(dir, function (err, files) {
+	  if (err) next(err);
+
+	  	response.render('doc', { title: 'Documentación', 
+								description: '', 
+								files: files,
+								dir: dir,
+								usuario_sesion: request.session.user,
+								classMenu: { index:false, quiz: false, author:false } });
+
+	  
+	});
+}
+
+
 //error 404
 exports.notfound = function(request, response) {
 	response.render('error', { title: 'ERROR 404', 
 							   description: 'Página no encontrada', 
 							   message:'',
 							   error:'', 
-							   file : 'error', 
 							   usuario_sesion: request.session.user,
 							   classMenu: { index:false, quiz: false, author:false }});
 }
@@ -46,7 +70,6 @@ exports.notfound = function(request, response) {
 exports.quizes = function(request, response, next){
 	var data = { title: 'Preguntas', 
 				 description: 'Prueba tus conocimientos', 
-				 file: 'quizes/list', 
 				 usuario_sesion: request.session.user,
 				 classMenu: { index:false, quiz: true, author:false },
 				 comments:[]
@@ -69,7 +92,6 @@ exports.search = function(request, response,  next){
 											 quizes: quizes, 
 											 comments: [],
 											 usuario_sesion: request.session.user,
-											 file: 'quizes/list', 
 											 classMenu: { index:false, quiz: true, author:false }});
 	}).catch(function(error){next(error)});
 
@@ -77,12 +99,10 @@ exports.search = function(request, response,  next){
 
 //quiz
 exports.quiz = function(request, response){
-	var quizes = new Array(request.quiz);
 	var data = { title: 'Pregunta #' +  request.quiz.id, 
 				 description: 'Prueba tus conocimientos', 
 				 quiz: request.quiz, 
-				 file: 'quizes/question',
-				 comments: [],
+				 errors:[],
 				 usuario_sesion: request.session.user,
 				 classMenu: { index:false, quiz: true, author:false }
 				}
@@ -104,7 +124,6 @@ exports.answer = function(request, response){
 									   description: '', 
 									   respuesta: answer,
 									   feedback: feedback, 
-									   file : 'quizes/answer',
 									   usuario_sesion: request.session.user,
 									   classMenu: { index:false, quiz: true, author:false }});
 }
@@ -124,7 +143,6 @@ exports.create = function(request, response, next ){
 										errors:[],
 										usuario_sesion: request.session.user,
 										temas: temas,
-										file: 'quizes/add', 
 										classMenu: { index:false, quiz: true, author:false }});
 	} else {
 			next("No tienes permisos");
@@ -141,7 +159,6 @@ exports.update = function(request, response, next){
 										errors:[],
 										usuario_sesion: request.session.user,
 										temas: temas,
-										file: 'quizes/add', 
 										classMenu: { index:false, quiz: true, author:false }});
 	} else {
 			next("No tienes permisos");
@@ -172,7 +189,6 @@ exports.insert = function(request, response, next){
 													   errors:err.errors,
 													   temas: temas,
 													   usuario_sesion: request.session.user,
-													   file: 'quizes/add', 
 													   classMenu: { index:false, quiz: true, author:false }});
 						} else {
 							quiz.save({fields: ["preguntas", "respuestas", "tematica"]}).then(function(){
@@ -194,7 +210,6 @@ exports.insert = function(request, response, next){
 											   errors:err.errors,
 											   temas: temas,
 											   usuario_sesion: request.session.user,
-											   file: 'quizes/add', 
 											   classMenu: { index:false, quiz: true, author:false }});
 				} else {
 					quiz.save().then(function(){

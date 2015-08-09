@@ -1,8 +1,6 @@
 
 exports.login = function(request, response){
-	 var errors = request.session.errors || {};
-	 request.session.errors = {};
-	 response.render('login',{ errors:errors, layout: 'login'} );
+	response.render('login',{ errors:[], layout: 'login'} );
 };
 
 exports.create= function(request, response){
@@ -15,10 +13,8 @@ exports.create= function(request, response){
 	user_controller.autenticar(login, password, function(error, user) {
 		// Si hay error en el inicio de session
 		if(error) {
-			console.log("error" + error);
-			request.session.errors = [{	"message": "Se ha producido un error: " + error}];
-			console.log("error" + request.session.errors["message"]);
-			response.redirect("/login");
+			var errors=[{message: error}];
+			response.render('login',{ errors:errors, layout: 'login'} );
 			return;
 		}
 

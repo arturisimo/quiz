@@ -8,26 +8,34 @@
 	</form>
 	
 	<%  if(comments.length>0) {
-			for (var i = comments.length - 1; i >= 0; i--) { %>
-
-				<div class="comentario" name="comentario<%= comments[i].id%>">
-					<legend>
+			for (var i = comments.length - 1; i >= 0; i--) { 
+				if(comments[i].valid) {
+			%>
+				<div class="comentario" id="comentario<%= comments[i].id%>">
+					<legend><strong>
 					<%  if(comments[i].site) { %>
-					<a href="<%= comments[i].site %>"><%= comments[i].nombre %></a>
+						<a href="<%= comments[i].site %>"><%= comments[i].nombre %></a>
 					<%	} else { %>
-					<%= comments[i].nombre %>
-					<%	} %>
+						<%  if(comments[i].nombre) { %>
+							<%= comments[i].nombre %>
+						<%	} else { %>
+							Anónimo
+						<%	} %>
+					<%	} %></strong>...
 					<span class="tematica"><a href="#comentario<%= comments[i].id%>">#<%=comments[i].id%></a> <%= comments[i].createdAt%></span>
 					</legend>
 					<p><%= comments[i].comentario %></p>
 				</div>
-<%	 		}
+<%	 			}
+			}
 		} 
 %>
 
 <div class="add-comentario" >
 	<form action="/quizes/<%= quiz.id %>/comments/insert" method="POST" role="form">
 		<legend>Añadir un comentario</legend>
+
+		<%- include ../includes/errors.ejs %>
 
 		<div class="form-group">
 			<label for="">Nombre</label>
@@ -38,8 +46,8 @@
 			<input type="text" class="form-control" name="site" placeholder="Página web"> 
 		</div>
 		<div class="form-group">
-			<label for="">Comentario</label>
-			<textarea name="comentario"  class="form-control" rows="3" required="required"></textarea>
+			<label for="">Comentario <span>(Obligatorio)</span></label>
+			<textarea name="comentario"  class="form-control" rows="3" ></textarea>
 		</div>
 		<button type="submit" class="btn btn-primary">Enviar</button>
 	</form>

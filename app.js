@@ -28,8 +28,21 @@ app.use(session());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(partials());
 
+//auto-logout
+app.use(function(request, response, next) {
+  var now = Date.now();
+  if (request.session.user && request.session.last) {
+    if (now - request.session.last > 120000) {
+      delete request.session.user;
+    }
+  }
+  request.session.last = now;
+  next();
+});
+
 //asociar rutas a los gestores
 app.use('/', routes);
+
 
 // development error handler
 // will print stacktrace
@@ -50,7 +63,6 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-
 app.use(function(err, request, response, next) {
   response.status(err.status || 500);
   response.render('error', {

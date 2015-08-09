@@ -46,7 +46,7 @@
 		  <% if (typeof quizes !== 'undefined' && quizes.length > 1) { %>
 				<form action="/quizes/search" method="POST" class="navbar-form navbar-right" role="form">
 					<div class="form-group  form-inline">
-						<input type="text" class="form-control" name="search" placeholder="Busqueda de preguntas">
+						<input type="text" class="form-control" name="search" required placeholder="Busqueda de preguntas">
 						<button type="submit" class="btn btn-primary">Buscar</button>
 					</div>	
 				</form>
@@ -81,7 +81,10 @@
 
 	    <footer class="footer">
 	      <div class="container">
-	        <p class="text-muted">file: <a href="https://github.com/arturisimo/quiz/blob/master/views/<%= file %>.ejs"> <%= file %>.ejs</a></p>
+	        <p class="text-muted">MOOC: <a href="http://www.miriadax.net/web/javascript-node-js" target="_blank">Desarrollo de servicios en la nube con HTML5, Javascript y node.js</a> | 
+	        	src: <a href="https://github.com/arturisimo/quiz" target="_blank"> https://github.com/arturisimo/quiz/</a> |
+				doc: <a href="/doc"> Documentos</a>
+	        </p>
 	      </div>
 	    </footer>
 

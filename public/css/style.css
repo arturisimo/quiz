@@ -46,7 +46,7 @@ body > .container {
 	font-size: 12px;
 }
 .login{
-	width: 20%;
+	max-width: 330px;
 }
 .login button{
 	margin-top: 20px;
@@ -59,4 +59,14 @@ table a{
 table a:hover{
 	color: #333;
 	text-decoration: none;
+}
+form label span{
+	font-weight: normal;
+}
+.text-muted{
+	font-size: 11px;
+}
+.text-muted a {
+    color: #777;
+    text-decoration: underline;
 }

@@ -1,0 +1,32 @@
+<% if(comments.length > 0 ) { %>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>id</th><th>Nombre</th><th>Comentario</th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% for (var i = comments.length - 1; i >= 0; i--) { %>
+		<tr>
+			<td><a href="/quizes/<%=comments[i].quizId%>#comentario<%=comments[i].id%>">#<%=comments[i].id%></a></td>
+			<td>
+			<%  if(comments[i].site) { %>
+					<a href="<%= comments[i].site %>"><%= comments[i].nombre %></a>
+					<%	} else { %>
+					<%= comments[i].nombre %>
+					<%	} %>
+			</td>
+			<td><%=comments[i].comentario%>
+			<td><a href="/quizes/<%=comments[i].quizId%>#comentario<%=comments[i].id%>" class="glyphicon glyphicon-zoom-in" title="Consultar"></a>
+				<%  if(comments[i].valid) { %>
+					<a href="/comment/<%=comments[i].id%>/valid" class="glyphicon glyphicon-chevron-down" title="Deshabilitar"></a>
+				<%	} else { %>
+					<a href="/comment/<%=comments[i].id%>/valid" class="glyphicon glyphicon-ban-circle" title="Habilitar"></a>
+				<%	} %>
+				<a href="/comment/<%=comments[i].id%>/delete" class="glyphicon glyphicon-remove" title="Eliminar"></a>
+			</td>
+		</tr>
+		<%	} %>
+	</tbody>
+</table>
+<% } %>

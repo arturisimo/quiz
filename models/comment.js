@@ -14,6 +14,9 @@ module.exports = function(sequelize, Datatypes) {
 							msg: "Falta el comentario"
 					}
 				}
+			},
+			valid: {
+		    	type: Datatypes.BOOLEAN
 			}
 	});
 }
