@@ -22,6 +22,7 @@ router.post('/quizes/insert', controller.insert);
 router.post('/quizes/:id(\\d+)/answer', controller.answer);
 router.get('/author', controller.author);
 router.get('/doc', controller.doc);
+router.get('/quizes/stadistics', controller.stadistic);
 
 router.post('/quizes/:id(\\d+)/comments/insert', comment_controller.insert);
 router.get('/comments', comment_controller.comments);

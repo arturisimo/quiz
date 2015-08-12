@@ -55,7 +55,7 @@ exports.comments = function(request, response){
  			response.render('', data);
 		}).catch(function(error){next(error)});
 	} else {
-		response.redirect('/');
+		next("No tienes permisos");
 	}
 }	
 

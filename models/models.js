@@ -10,6 +10,12 @@ var Comment = sequelize.import(path.join(__dirname, 'comment'));
 Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment);
 
+Quiz.stats = function() {
+	 return sequelize.query(
+	 "SELECT q.id as quizId, c.id as commentId from quizzes q left outer join comments c on (q.id=c.\"quizId\")",
+ 	{type: sequelize.QueryTypes.SELECT});
+}
+
 exports.Quiz = Quiz;
 exports.Comment = Comment;
 

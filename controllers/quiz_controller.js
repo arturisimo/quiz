@@ -105,7 +105,7 @@ exports.quiz = function(request, response){
 				 errors:[],
 				 usuario_sesion: request.session.user,
 				 classMenu: { index:false, quiz: true, author:false }
-				}
+				};
 
 	models.Comment.findAll({order: [['id', 'DESC']], where: {quizId:request.quiz.id}}).then(function(comments){
 		data.comments = comments; 
@@ -131,6 +131,49 @@ exports.answer = function(request, response){
 /*
  * ADMIN CONTROLLERS
  */
+
+exports.stadistic = function(request, response, next) {
+	var data = { title: 'Estadísticas', 
+		 description: 'Prueba tus conocimientos', 
+		 quiz: request.quiz, 
+		 errors:[],
+		 usuario_sesion: request.session.user,
+		 classMenu: { index:false, quiz: false, author:false }
+	};
+	
+	var num_quiz = 0;
+	var num_comment = 0;
+	var num_quiz_comment = 0;
+	var num_quiz_nocomment = 0;
+	var avg_comment_quiz = 0;
+
+	models.Quiz.stats().then(function(stats) {
+
+		var quizId = 0;
+
+		for (var i = 0; i < stats.length; i++) {
+			if (quizId != stats[i].quizid){
+				quizId = stats[i].quizid;
+				num_quiz++;
+				if(stats[i].commentid!=null){
+					num_comment++;
+					num_quiz_comment++;
+				} else {
+					num_quiz_nocomment++;
+				}
+			} else {
+				num_comment++;
+				num_quiz_comment++;
+			}
+		};
+
+		avg_comment_quiz = num_comment / num_quiz;
+
+		data.stats = {num_quiz:num_quiz,num_comment:num_comment, num_quiz_comment:num_quiz_comment, num_quiz_nocomment:num_quiz_nocomment, avg_comment_quiz:avg_comment_quiz};
+		response.render('quizes/stadistic', data);
+	});
+
+};
 
 
 //add quiz
