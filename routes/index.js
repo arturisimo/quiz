@@ -25,7 +25,7 @@ router.get('/doc', controller.doc);
 router.get('/quizes/stadistics', controller.stadistic);
 
 router.post('/quizes/:id(\\d+)/comments/insert', comment_controller.insert);
-router.get('/comments', comment_controller.comments);
+//router.get('/comments', comment_controller.comments);
 router.get('/comment/:commentId(\\d+)/delete', comment_controller.delete);
 router.get('/comment/:commentId(\\d+)/valid', comment_controller.valid);
 

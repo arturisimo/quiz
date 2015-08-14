@@ -26,12 +26,18 @@ exports.autenticar = function(login, password, callback) {
 };
 
 exports.user = function(request, response){
-	var data = { title: 'Usuario ' + request.session.user.username, 
-				 description: '', 
-				 file: 'quizes/question',
-				 usuario_sesion: request.session.user,
-				 classMenu: { index:false, quiz: false, author:false }
-				};
-	response.render('user/user', data);
+
+	if(request.session.user){
+		var data = { title: 'Usuario ' + request.session.user.username, 
+					 description: '', 
+					 file: 'quizes/question',
+					 usuario_sesion: request.session.user,
+					 classMenu: { index:false, quiz: false, author:false }
+					};
+		response.render('user/user', data);
+	} else {
+			next("No tienes permisos");
+	}
+	
 	
 }

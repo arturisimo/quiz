@@ -14,21 +14,73 @@ exports.load = function(request, response, next, id){
 }
 
 //welcome 
-exports.index = function(request, response){
+exports.index = function(request, response, next){
 
-	if(request.session.user){
-		response.redirect('comments');
+	var data = { title: 'Bienvenid@ a Quiz', 
+				 errors:[],
+				 usuario_sesion: request.session.user,
+				 classMenu: { index:true, quiz: false, author:false }
+	};
+
+	if(request.session.user) {
+
+		var num_quiz = 0;
+		var num_comment = 0;
+		var num_quiz_comment = 0;
+		var num_quiz_nocomment = 0;
+		var avg_comment_quiz = 0;
+
+		data.description = 'Zona de administración';
+
+		models.Quiz.stats().then(function(stats) {
+
+			var quizId = 0;
+			var quizes = [];
+
+			for (var i = 0; i < stats.length; i++) {
+				
+				if (quizId != stats[i].quizid){
+					quizId = stats[i].quizid;
+					num_quiz++;
+					quizes[i] = {quizId: quizId, preguntas: stats[i].preguntas, respuestas: stats[i].respuestas, tematica: stats[i].tematica, comments:[] };
+					if(stats[i].commentid!=null){
+						num_comment++;
+						num_quiz_comment++;
+						quizes[i].comments.push({commentId: stats[i].commentid, nombre: stats[i].nombre, site: stats[i].site, comentario: stats[i].comentario, valid: stats[i].valid  });
+					} else {
+						num_quiz_nocomment++;
+					}
+				} else {
+					num_comment++;
+					num_quiz_comment++;
+					quizes[quizes.length-1].comments.push({commentId: stats[i].commentid, nombre: stats[i].nombre, site: stats[i].site, comentario: stats[i].comentario, valid: stats[i].valid  });
+				}
+
+			}
+
+			avg_comment_quiz = num_comment / num_quiz;
+
+			data.stats = {num_quiz:num_quiz,num_comment:num_comment, num_quiz_comment:num_quiz_comment, num_quiz_nocomment:num_quiz_nocomment, avg_comment_quiz:avg_comment_quiz};
+			data.quizes = quizes;
+
+			
+
+			response.render('quizes/admin', data);
+
+		}).catch(function(error){next(error)});
+
+
 	} else {
-		var data = { title: 'Bienvenid@ a Quiz', 
-		 			  description: 'El portal donde puedes crear tus propios juegos', 
-		 			  comments:[],
-		 			  usuario_sesion: request.session.user,
-		 			  classMenu: { index:true, quiz: false, author:false }
-		 			};
-
+		
+		data.description = 'El portal donde puedes crear tus propios juegos';
+		
 		response.render('', data);
 	}
+
+
+
 }
+
 //author
 exports.author = function(request, response){
 	response.render('author', { title: 'Bienvenid@ a Quiz', 
@@ -91,6 +143,7 @@ exports.search = function(request, response,  next){
 											 description: quizes.length > 0  ? 'Prueba tus conocimientos' : 'no hay preguntas con este criterio', 
 											 quizes: quizes, 
 											 comments: [],
+											 search: search,
 											 usuario_sesion: request.session.user,
 											 classMenu: { index:false, quiz: true, author:false }});
 	}).catch(function(error){next(error)});

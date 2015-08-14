@@ -38,26 +38,35 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="<%= classMenu.index ?  'active':''%>" ><a href="/">Inicio</a></li>
-            <li class="<%= classMenu.quiz ?  'active':''%>"><a href="/quizes">Preguntas</a></li>
-            <li class="<%= classMenu.author ?  'active':''%>"><a  href="/author">Créditos</a></li>
+          	<li class="<%= classMenu.index ?  'active':''%>" ><a href="/">Inicio</a></li>
+          	<% if(!usuario_sesion){ %>
+	            <li class="<%= classMenu.quiz ?  'active':''%>"><a href="/quizes">Preguntas</a></li>
+	            <li class="<%= classMenu.author ?  'active':''%>"><a  href="/author">Créditos</a></li>
+            <% } else { %>	
+            	<li class="<%= classMenu.author ?  'active':''%>"><a  href="/quizes/stadistics">Estadísticas</a></li>
+            <% } %>
           </ul>
 			
-		  <% if (typeof quizes !== 'undefined' && quizes.length > 1) { %>
-				<form action="/quizes/search" method="POST" class="navbar-form navbar-right" role="form">
-					<div class="form-group  form-inline">
-						<input type="text" class="form-control" name="search" required placeholder="Busqueda de preguntas">
-						<button type="submit" class="btn btn-primary">Buscar</button>
+		  <ul class="nav navbar-nav navbar-right">
+		  	<li>
+          		<form action="/quizes/search" method="POST" class="navbar-form navbar-right" id="form_search_quiz" role="form">
+					<div class="form-group  form-inline" id="div_search_quiz" >
+						<% if(typeof search !== "undefined") { %>
+							<input type="text" class="form-control" name="search" id="search_input" value="<%=search%>" required placeholder="Busqueda de preguntas">
+						<% } else { %>		
+							<input type="text" class="form-control" name="search" id="search_input" required placeholder="Busqueda de preguntas">
+						<% } %>	
 					</div>	
 				</form>
-		  <% } %>
-
-          <ul class="nav navbar-nav navbar-right">
+			</li>
+			<li>	
+				<a href="#" id="search_quiz"><span class="glyphicon glyphicon-search"></span></a>
+			</li>
           	<% if(usuario_sesion){ %>
           		<li><a href="/user/<%=usuario_sesion.id%>"><span class="glyphicon glyphicon-user"></span> <%= usuario_sesion.username%></a></li>
-				<li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Salir de la sesión</a></li>
+				<li><a href="/logout"><span class="glyphicon glyphicon-off"></span> </a></li>
 			<% } else { %>	
-				<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Iniciar sesión</a></li>
+				<li><a href="/login"><span class="glyphicon glyphicon-off"></span> </a></li>
 			<% } %>	
 		  </ul>
         </div>
@@ -90,6 +99,7 @@
 
 		<!-- jQuery -->
 		<script src="//code.jquery.com/jquery.js"></script>
+		<script src="/js/js.js"></script>
 		<!-- Bootstrap JavaScript -->
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	</body>

@@ -11,9 +11,10 @@ Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment);
 
 Quiz.stats = function() {
-	 return sequelize.query(
-	 "SELECT q.id as quizId, c.id as commentId from quizzes q left outer join comments c on (q.id=c.\"quizId\")",
- 	{type: sequelize.QueryTypes.SELECT});
+	return sequelize.query(
+	  "SELECT q.id as quizId, q.preguntas, q.respuestas, q.tematica, c.id as commentId, c.nombre, c.site, c.comentario, c.valid from quizzes q left outer join comments c on (q.id=c.\"quizId\") order by q.id asc, c.id asc",
+ 	  {type: sequelize.QueryTypes.SELECT}
+    );
 }
 
 exports.Quiz = Quiz;

@@ -43,6 +43,7 @@ exports.insert = function(request, response){
 	});
 }
 
+/*
 exports.comments = function(request, response){
 	if(request.session.user){
 		models.Comment.findAll().then(function(comments){
@@ -58,6 +59,7 @@ exports.comments = function(request, response){
 		next("No tienes permisos");
 	}
 }	
+*/
 
 
 //delete comment

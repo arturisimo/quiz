@@ -24,12 +24,12 @@ exports.create= function(request, response){
 		};
 
 		// Redirección a path anterior a login
-		response.redirect('/quizes');
+		response.redirect('/');
 	});
 
 };
 
 exports.logout = function(request, response){
 	delete request.session.user;
-	response.redirect('/quizes');
+	response.redirect('/');
 };
