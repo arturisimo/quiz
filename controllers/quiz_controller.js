@@ -158,6 +158,7 @@ exports.stadistic = function(request, response, next) {
 		var num_comment = 0;
 		var num_quiz_comment = 0;
 		var num_quiz_comment_counted = 0;
+		var num_quiz_nocomment = 0;
 		var avg_comment_quiz = 0;
 
 		models.Quiz.stats().then(function(stats) {
