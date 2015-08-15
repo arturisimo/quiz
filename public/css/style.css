@@ -73,3 +73,13 @@ form label span{
 .comments{
 	display: none;
 }
+.comments table {
+	background-color: #f8f8f8 !important;
+	border:1px solid #e7e7e7;
+	padding:15px;
+	font-size: 12px;
+}
+.github{
+	height: 18px;
+	width: 18px;
+}

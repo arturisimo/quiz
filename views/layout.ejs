@@ -43,7 +43,8 @@
 	            <li class="<%= classMenu.quiz ?  'active':''%>"><a href="/quizes">Preguntas</a></li>
 	            <li class="<%= classMenu.author ?  'active':''%>"><a  href="/author">Créditos</a></li>
             <% } else { %>	
-            	<li class="<%= classMenu.author ?  'active':''%>"><a  href="/quizes/stadistics">Estadísticas</a></li>
+            	<li class="<%= classMenu.stats ?  'active':''%>"><a href="/quizes/stadistics">Estadísticas</a></li>
+            	<li class="<%= classMenu.doc ?  'active':''%>"><a href="/doc">Documentos</a></li>
             <% } %>
           </ul>
 			
@@ -60,7 +61,10 @@
 				</form>
 			</li>
 			<li>	
-				<a href="#" id="search_quiz"><span class="glyphicon glyphicon-search"></span></a>
+				<a href="#" id="search_quiz" title="Busqueda de preguntas"><span class="glyphicon glyphicon-search"></span></a>
+			</li>
+			<li>	
+				<a href="https://github.com/arturisimo/quiz" title="github.com/arturisimo/quiz"><img class="github" src="/img/github.ico" /></a>
 			</li>
           	<% if(usuario_sesion){ %>
           		<li><a href="/user/<%=usuario_sesion.id%>"><span class="glyphicon glyphicon-user"></span> <%= usuario_sesion.username%></a></li>
@@ -90,10 +94,7 @@
 
 	    <footer class="footer">
 	      <div class="container">
-	        <p class="text-muted">MOOC: <a href="http://www.miriadax.net/web/javascript-node-js" target="_blank">Desarrollo de servicios en la nube con HTML5, Javascript y node.js</a> | 
-	        	src: <a href="https://github.com/arturisimo/quiz" target="_blank"> https://github.com/arturisimo/quiz/</a> |
-				doc: <a href="/doc"> Documentos</a>
-	        </p>
+	        <p class="text-muted">MOOC: <a href="http://www.miriadax.net/web/javascript-node-js" target="_blank">Desarrollo de servicios en la nube con HTML5, Javascript y node.js</a></p>
 	      </div>
 	    </footer>
 

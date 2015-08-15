@@ -1,23 +1,68 @@
 <table class="table table-hover">
 	<thead>
 		<tr>
-			<th>id</th><th>Pregunta</th><th>Respuesta</th><th>Temática</th><th></th>
+			<th>id</th><th>Pregunta</th><th>Respuesta</th><th>Temática</th><th>Comentarios</th><th></th>
 		</tr>
 	</thead>
 	<tbody>
-		<% for (var i = quizes.length - 1; i >= 0; i--) { %>
-		<tr>
-			<td><%=quizes[i].id%></td><td><%=quizes[i].preguntas%></td><td><%=quizes[i].respuestas%></td><td><%=quizes[i].tematica%></td>
-			<td><a href="/quizes/<%=quizes[i].id%>" class="glyphicon glyphicon-zoom-in" title="Consultar"></a>
-				<a href="/quizes/<%=quizes[i].id%>/update" class="glyphicon glyphicon-edit" title="Eliminar"></a>
-				<a href="/quizes/<%=quizes[i].id%>/delete" class="glyphicon glyphicon-remove" title="Modificar"></a>
-			</td>
-		</tr>
-		<%	} %>
+
+		<% for (var i = 0; i < quizes.length; i++) { 
+			if(quizes[i]) { %>
+			<tr>
+				<td><%=quizes[i].quizId%></td><td><%=quizes[i].preguntas%></td><td><%=quizes[i].respuestas%></td><td><%=quizes[i].tematica%> 
+				<td>
+				<% if(quizes[i].comments.length > 0 ) { %>
+					 <a class="show_comments" href="#" > <span>+</span> <%=quizes[i].comments.length%> </a>
+				<%	} %>
+				</td>
+				<td><a href="/quizes/<%=quizes[i].quizId%>" class="glyphicon glyphicon-zoom-in" title="Consultar"></a>
+					<a href="/quizes/<%=quizes[i].quizId%>/update" class="glyphicon glyphicon-edit" title="Eliminar"></a>
+					<a href="/quizes/<%=quizes[i].quizId%>/delete" class="glyphicon glyphicon-remove" title="Modificar"></a>
+				</td>
+			</tr>	
+			<% if(quizes[i].comments && quizes[i].comments.length>0) { %>
+			<tr class="comments" >
+				<td colspan="6">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Nombre</th><th>Comentario</th><th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<% for (var j = quizes[i].comments.length - 1; j >= 0; j--) { 
+								var comment = quizes[i].comments[j];
+							%>
+							<tr>
+								<td>
+								<%  if(comment.site) { %>
+										<a href="<%= comment.site %>"><%= comment.nombre %></a>
+								<%	} else { %>
+										<%= comment.nombre %>
+								<%	} %>
+								</td>
+								<td><%=comment.comentario%>
+								<td><a href="/quizes/<%=comment.commentId%>#comentario<%=comment.commentId%>" class="glyphicon glyphicon-search" title="Consultar"></a>
+									<%  if(comment.valid) { %>
+										<a href="/comment/<%=comment.commentId%>/valid" class="glyphicon glyphicon-chevron-down" title="Deshabilitar"></a>
+									<%	} else { %>
+										<a href="/comment/<%=comment.commentId%>/valid" class="glyphicon glyphicon-ban-circle" title="Habilitar"></a>
+									<%	} %>
+									<a href="/comment/<%=comment.commentId%>/delete" class="glyphicon glyphicon-remove" title="Eliminar"></a>
+								</td>
+							</tr>
+							<%	} %>
+						</tbody>
+					</table>
+				</td>
+			</tr>	
+			<%	} %>
+		<%	}
+		} %>
+		<tr><td colspan="6">
+		<div class="add">
+			<a href="/quizes/add" class="btn btn-danger">Nueva pregunta</a>
+		</div>
+		</td></tr>
 	</tbody>
 </table>
-
-<div class="add">
-	<a href="/quizes/add" class="btn btn-danger">Nueva pregunta</a>
-</div>
-

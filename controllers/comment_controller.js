@@ -12,7 +12,7 @@ exports.load = function(request, response, next, commentId) {
 	}).catch(function(error) {next(error);});
 };
 
-exports.insert = function(request, response){
+exports.insert = function(request, response, next){
 	var quiz = request.quiz;
 
 	//add quiz	

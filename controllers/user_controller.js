@@ -32,7 +32,7 @@ exports.user = function(request, response){
 					 description: '', 
 					 file: 'quizes/question',
 					 usuario_sesion: request.session.user,
-					 classMenu: { index:false, quiz: false, author:false }
+					 classMenu: { index:false, quiz: false, author:false, stats: false, doc:false }
 					};
 		response.render('user/user', data);
 	} else {

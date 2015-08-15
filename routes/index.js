@@ -39,4 +39,3 @@ router.get('/user/:userId(\\d+)', user_controller.user);
 router.get('*', controller.notfound);
 
 module.exports = router;
-

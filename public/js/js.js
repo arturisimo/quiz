@@ -1,12 +1,15 @@
 $( document ).ready(function() {
 
+	
+
+	$("a.show_comments").click(function(){
+		$(this).parent().parent().next().toggle( "slow" );
+	});
+
+	//search
 	if ($('#search_input').val()=='') {
 		$("#div_search_quiz").hide();
 	}
-
-	$("a.show_comments").click(function(){
-		$(this).parent().parent().next().toggle('slow');
-	});
 
 	$("a#search_quiz").click(function(){
 		if ($('#search_input').val()) {
@@ -17,4 +20,3 @@ $( document ).ready(function() {
 	});
 
 });
-

@@ -12,6 +12,10 @@ module.exports = function(sequelize, Datatypes) {
 		    	validate: {
 					notEmpty: {
 							msg: "Falta el comentario"
+					},
+					len: {
+					    args: [0, 255],
+					    msg: 'La longitud máxima es de 250 carácteres'
 					}
 				}
 			},

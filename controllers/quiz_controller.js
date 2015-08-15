@@ -19,16 +19,10 @@ exports.index = function(request, response, next){
 	var data = { title: 'Bienvenid@ a Quiz', 
 				 errors:[],
 				 usuario_sesion: request.session.user,
-				 classMenu: { index:true, quiz: false, author:false }
+				 classMenu: { index:true, quiz: false, author:false, stats: false, doc:false}
 	};
 
 	if(request.session.user) {
-
-		var num_quiz = 0;
-		var num_comment = 0;
-		var num_quiz_comment = 0;
-		var num_quiz_nocomment = 0;
-		var avg_comment_quiz = 0;
 
 		data.description = 'Zona de administración';
 
@@ -41,43 +35,25 @@ exports.index = function(request, response, next){
 				
 				if (quizId != stats[i].quizid){
 					quizId = stats[i].quizid;
-					num_quiz++;
 					quizes[i] = {quizId: quizId, preguntas: stats[i].preguntas, respuestas: stats[i].respuestas, tematica: stats[i].tematica, comments:[] };
 					if(stats[i].commentid!=null){
-						num_comment++;
-						num_quiz_comment++;
 						quizes[i].comments.push({commentId: stats[i].commentid, nombre: stats[i].nombre, site: stats[i].site, comentario: stats[i].comentario, valid: stats[i].valid  });
-					} else {
-						num_quiz_nocomment++;
 					}
 				} else {
-					num_comment++;
-					num_quiz_comment++;
 					quizes[quizes.length-1].comments.push({commentId: stats[i].commentid, nombre: stats[i].nombre, site: stats[i].site, comentario: stats[i].comentario, valid: stats[i].valid  });
 				}
-
 			}
 
-			avg_comment_quiz = num_comment / num_quiz;
-
-			data.stats = {num_quiz:num_quiz,num_comment:num_comment, num_quiz_comment:num_quiz_comment, num_quiz_nocomment:num_quiz_nocomment, avg_comment_quiz:avg_comment_quiz};
 			data.quizes = quizes;
 
-			
-
-			response.render('quizes/admin', data);
+			response.render('quizes/list-admin', data);
 
 		}).catch(function(error){next(error)});
 
-
 	} else {
-		
 		data.description = 'El portal donde puedes crear tus propios juegos';
-		
 		response.render('', data);
 	}
-
-
 
 }
 
@@ -86,27 +62,8 @@ exports.author = function(request, response){
 	response.render('author', { title: 'Bienvenid@ a Quiz', 
 								description: 'by arturo', 
 								usuario_sesion: request.session.user,
-								classMenu: { index:false, quiz: false, author:true } });
+								classMenu: { index:false, quiz: false, author:true, stats: false, doc:false} });
 }
-exports.doc = function(request, response, next){
-
-	var fs = require('fs');
-	var dir = './public/doc/';
-
-	fs.readdir(dir, function (err, files) {
-	  if (err) next(err);
-
-	  	response.render('doc', { title: 'Documentación', 
-								description: '', 
-								files: files,
-								dir: dir,
-								usuario_sesion: request.session.user,
-								classMenu: { index:false, quiz: false, author:false } });
-
-	  
-	});
-}
-
 
 //error 404
 exports.notfound = function(request, response) {
@@ -115,7 +72,7 @@ exports.notfound = function(request, response) {
 							   message:'',
 							   error:'', 
 							   usuario_sesion: request.session.user,
-							   classMenu: { index:false, quiz: false, author:false }});
+							   classMenu: { index:false, quiz: false, author:false, stats: false, doc:false }});
 }
 
 //list quiz
@@ -123,13 +80,13 @@ exports.quizes = function(request, response, next){
 	var data = { title: 'Preguntas', 
 				 description: 'Prueba tus conocimientos', 
 				 usuario_sesion: request.session.user,
-				 classMenu: { index:false, quiz: true, author:false },
+				 classMenu: { index:false, quiz: true, author:false, stats: false, doc:false },
 				 comments:[]
 				};
 	
 	models.Quiz.findAll().then(function(quizes){
 		data.quizes = quizes; 
-		response.render(request.session.user ? 'quizes/list-admin' : 'quizes/list', data);
+		response.render('quizes/list', data);
 	}).catch(function(error){next(error)});
 }
 
@@ -145,7 +102,7 @@ exports.search = function(request, response,  next){
 											 comments: [],
 											 search: search,
 											 usuario_sesion: request.session.user,
-											 classMenu: { index:false, quiz: true, author:false }});
+											 classMenu: { index:false, quiz: true, author:false, stats: false, doc:false }});
 	}).catch(function(error){next(error)});
 
 }
@@ -157,7 +114,7 @@ exports.quiz = function(request, response){
 				 quiz: request.quiz, 
 				 errors:[],
 				 usuario_sesion: request.session.user,
-				 classMenu: { index:false, quiz: true, author:false }
+				 classMenu: { index:false, quiz: true, author:false, stats: false, doc:false }
 				};
 
 	models.Comment.findAll({order: [['id', 'DESC']], where: {quizId:request.quiz.id}}).then(function(comments){
@@ -178,7 +135,7 @@ exports.answer = function(request, response){
 									   respuesta: answer,
 									   feedback: feedback, 
 									   usuario_sesion: request.session.user,
-									   classMenu: { index:false, quiz: true, author:false }});
+									   classMenu: { index:false, quiz: true, author:false, stats: false, doc:false}});
 }
 
 /*
@@ -186,48 +143,75 @@ exports.answer = function(request, response){
  */
 
 exports.stadistic = function(request, response, next) {
-	var data = { title: 'Estadísticas', 
-		 description: 'Prueba tus conocimientos', 
-		 quiz: request.quiz, 
-		 errors:[],
-		 usuario_sesion: request.session.user,
-		 classMenu: { index:false, quiz: false, author:false }
-	};
+
+	if(request.session.user){
 	
-	var num_quiz = 0;
-	var num_comment = 0;
-	var num_quiz_comment = 0;
-	var num_quiz_nocomment = 0;
-	var avg_comment_quiz = 0;
+		var data = { title: 'Estadísticas', 
+			 description: 'Prueba tus conocimientos', 
+			 quiz: request.quiz, 
+			 errors:[],
+			 usuario_sesion: request.session.user,
+			 classMenu: { index:false, quiz: false, author:false, stats: true, doc:false }
+		};
+		
+		var num_quiz = 0;
+		var num_comment = 0;
+		var num_quiz_comment = 0;
+		var num_quiz_comment_counted = 0;
+		var avg_comment_quiz = 0;
 
-	models.Quiz.stats().then(function(stats) {
+		models.Quiz.stats().then(function(stats) {
 
-		var quizId = 0;
+			var quizId = 0;
 
-		for (var i = 0; i < stats.length; i++) {
-			if (quizId != stats[i].quizid){
-				quizId = stats[i].quizid;
-				num_quiz++;
-				if(stats[i].commentid!=null){
+			for (var i = 0; i < stats.length; i++) {
+				if (quizId != stats[i].quizid){
+					quizId = stats[i].quizid;
+					num_quiz++;
+					if(stats[i].commentid!=null){
+						num_comment++;
+						num_quiz_comment++;
+					} else {
+						num_quiz_nocomment++;
+					}
+				} else {
 					num_comment++;
 					num_quiz_comment++;
-				} else {
-					num_quiz_nocomment++;
 				}
-			} else {
-				num_comment++;
-				num_quiz_comment++;
 			}
-		};
 
-		avg_comment_quiz = num_comment / num_quiz;
+			avg_comment_quiz = (num_comment / num_quiz).toFixed(2);
 
-		data.stats = {num_quiz:num_quiz,num_comment:num_comment, num_quiz_comment:num_quiz_comment, num_quiz_nocomment:num_quiz_nocomment, avg_comment_quiz:avg_comment_quiz};
-		response.render('quizes/stadistic', data);
-	});
-
+			data.stats = {num_quiz:num_quiz,num_comment:num_comment, num_quiz_comment:num_quiz_comment, num_quiz_nocomment:num_quiz_nocomment, avg_comment_quiz:avg_comment_quiz};
+			response.render('quizes/stadistic', data);
+		});
+	} else {
+			next("No tienes permisos");
+	}
 };
 
+//doc
+exports.doc = function(request, response, next){
+	if(request.session.user){
+		var fs = require('fs');
+		var dir = './public/doc/';
+
+		fs.readdir(dir, function (err, files) {
+		  if (err) next(err);
+
+		  	response.render('doc', { title: 'Documentación', 
+									description: '', 
+									files: files,
+									dir: dir,
+									usuario_sesion: request.session.user,
+									classMenu: { index:false, quiz: false, author:false, stats: false, doc:true} });
+
+		  
+		});
+	} else {
+			next("No tienes permisos");
+	}
+}
 
 //add quiz
 exports.create = function(request, response, next ){
@@ -239,7 +223,7 @@ exports.create = function(request, response, next ){
 										errors:[],
 										usuario_sesion: request.session.user,
 										temas: temas,
-										classMenu: { index:false, quiz: true, author:false }});
+										classMenu: { index:false, quiz: true, author:false, stats: false, doc:false}});
 	} else {
 			next("No tienes permisos");
 	}
@@ -255,7 +239,7 @@ exports.update = function(request, response, next){
 										errors:[],
 										usuario_sesion: request.session.user,
 										temas: temas,
-										classMenu: { index:false, quiz: true, author:false }});
+										classMenu: { index:false, quiz: true, author:false, stats: false, doc:false }});
 	} else {
 			next("No tienes permisos");
 	}	
@@ -285,7 +269,7 @@ exports.insert = function(request, response, next){
 													   errors:err.errors,
 													   temas: temas,
 													   usuario_sesion: request.session.user,
-													   classMenu: { index:false, quiz: true, author:false }});
+													   classMenu: { index:false, quiz: true, author:false, stats: false, doc:false }});
 						} else {
 							quiz.save({fields: ["preguntas", "respuestas", "tematica"]}).then(function(){
 								response.redirect('/quizes');
@@ -306,7 +290,7 @@ exports.insert = function(request, response, next){
 											   errors:err.errors,
 											   temas: temas,
 											   usuario_sesion: request.session.user,
-											   classMenu: { index:false, quiz: true, author:false }});
+											   classMenu: { index:false, quiz: true, author:false, stats: false, doc:false }});
 				} else {
 					quiz.save().then(function(){
 						response.redirect('/quizes');

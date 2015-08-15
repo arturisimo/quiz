@@ -1,4 +1,4 @@
-<% for (var i = quizes.length - 1; i >= 0; i--) { %>
+<% for (var i = 0; i < quizes.length; i++) { %>
 	<form action="/quizes/<%=quizes[i].id%>/answer" method="POST" role="form">
 		<legend><span><a href="/quizes/<%=quizes[i].id%>">#<%=quizes[i].id%></a></span> <%= quizes[i].preguntas %><span class='tematica'><%= quizes[i].tematica %><span></legend>
 	
