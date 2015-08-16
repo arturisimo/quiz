@@ -26,7 +26,7 @@ exports.index = function(request, response, next){
 
 		data.description = 'Zona de administración';
 
-		models.Quiz.findAll({ include: [{ model: models.Comment }] }).then(function(quizes) {
+		models.Quiz.findAll({ include: [{ model: models.Comment }], order: [['id', 'ASC']] }).then(function(quizes) {
 			data.quizes = quizes;
 			response.render('quizes/list-admin', data);
 		}).catch(function(error){next(error)});
@@ -130,7 +130,7 @@ exports.stadistic = function(request, response, next) {
 	if(request.session.user){
 	
 		var data = { title: 'Estadísticas', 
-			 description: 'Prueba tus conocimientos', 
+			 description: '', 
 			 quiz: request.quiz, 
 			 errors:[],
 			 usuario_sesion: request.session.user,
@@ -245,7 +245,7 @@ exports.insert = function(request, response, next){
 													   classMenu: { index:false, quiz: true, author:false, stats: false, doc:false }});
 						} else {
 							quiz.save({fields: ["preguntas", "respuestas", "tematica"]}).then(function(){
-								response.redirect('/quizes');
+								response.redirect('/');
 							}).catch(function(error){next(error)});
 						}
 					});
@@ -266,7 +266,7 @@ exports.insert = function(request, response, next){
 											   classMenu: { index:false, quiz: true, author:false, stats: false, doc:false }});
 				} else {
 					quiz.save().then(function(){
-						response.redirect('/quizes');
+						response.redirect('/');
 					}).catch(function(error){next(error)});
 				}
 			});
@@ -280,7 +280,7 @@ exports.insert = function(request, response, next){
 exports.delete = function(request, response, next){
 	if(request.session.user){
 		request.quiz.destroy().then(function(){
-			response.redirect('/quizes');
+			response.redirect('/');
 		}).catch(function(error){next(error)});
 	} else {
 			next("No tienes permisos");

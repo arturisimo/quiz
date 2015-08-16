@@ -17,9 +17,9 @@
 		<label for="">Temática <span>(Obligatorio)</span></label>
 		<select name="tematica" class="form-control">
 		  <option value="" selected>Selecciona una temática...</option>
-		  <% temas.forEach(function(tema){ %> 
+		  <% temas.forEach(function(tema){  
 		  		var selected = quiz.tematica == tema ? 'selected':''; %>
-				<option <%= selected%> value="<%=tema%>" ><%=tema %></option>
+				<option <%= selected %> value="<%=tema%>" ><%=tema %></option>
 		  <% }); %>		 
 		</select>
 	</div>

@@ -1,5 +1,5 @@
 	<form action="/quizes/<%=quiz.id%>/answer" method="POST" role="form">
-		<legend><span><a href="/quizes/<%=quiz.id%>">#<%=quiz.id%></a></span> <%= quiz.preguntas %><span class='tematica'><%= quiz.tematica %><span></legend>
+		<legend><%= quiz.preguntas %><span class='tematica'><%= quiz.tematica %><span></legend>
 	
 		<div class="form-group form-inline">
 			<input type="text" class="form-control" name="answer" placeholder="responde aquí" required> 
@@ -14,7 +14,7 @@
 	%>
 
 				<div class="comentario" id="comentario<%= comment.id%>">
-					<legend><strong>
+					<legend><a href="#comentario<%= comment.id%>">#<%=comment.id%></a><strong>
 					<%  if(comment.site) { %>
 						<a href="<%= comment.site %>"><%= comment.nombre %></a>
 					<%	} else { %>
@@ -24,7 +24,7 @@
 							Anónimo
 						<%	} %>
 					<%	} %></strong>...
-					<span class="tematica"><a href="#comentario<%= comment.id%>">#<%=comment.id%></a> <%= dateComment %></span>
+					<span class="tematica"> <%= dateComment %></span>
 					</legend>
 					<p><%= comment.comentario %></p>
 				</div>

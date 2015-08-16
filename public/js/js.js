@@ -1,9 +1,14 @@
 $( document ).ready(function() {
 
-	
 
 	$("a.show_comments").click(function(){
-		$(this).parent().parent().next().toggle( "slow" );
+		if($(this).children()[0].textContent=="+"){
+			$(this).children()[0].textContent="-"
+			$(this).parent().parent().next().slideDown("fast");
+		} else {
+			$(this).children()[0].textContent="+"
+			$(this).parent().parent().next().slideUp("fast");
+		}
 	});
 
 	//search

@@ -10,7 +10,7 @@
 				<td><%=quiz.id%></td><td><%=quiz.preguntas%></td><td><%=quiz.respuestas%></td><td><%=quiz.tematica%> 
 				<td>
 				<% if(quiz.comments.length > 0) { %>
-					 <a class="show_comments" href="#" > <span>+</span> <%=quiz.comments.length%> </a>
+					 <a class="show_comments" href="#" > <%=quiz.comments.length%> <span>+</span>  </a>
 				<%	} %>
 				</td>
 				<td><a href="/quizes/<%=quiz.id%>" class="glyphicon glyphicon-search" title="Consultar"></a>
@@ -18,7 +18,7 @@
 					<a href="/quizes/<%=quiz.id%>/delete" class="glyphicon glyphicon-remove" title="Modificar"></a>
 				</td>
 			</tr>	
-			<% if(quiz.comments ) { %>
+			<% if(quiz.comments.length > 0 ) { %>
 			<tr class="comments" >
 				<td colspan="6">
 					<table class="table table-hover">
