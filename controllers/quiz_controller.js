@@ -26,28 +26,9 @@ exports.index = function(request, response, next){
 
 		data.description = 'Zona de administración';
 
-		models.Quiz.stats().then(function(stats) {
-
-			var quizId = 0;
-			var quizes = [];
-
-			for (var i = 0; i < stats.length; i++) {
-				
-				if (quizId != stats[i].quizid){
-					quizId = stats[i].quizid;
-					quizes[i] = {quizId: quizId, preguntas: stats[i].preguntas, respuestas: stats[i].respuestas, tematica: stats[i].tematica, comments:[] };
-					if(stats[i].commentid!=null){
-						quizes[i].comments.push({commentId: stats[i].commentid, nombre: stats[i].nombre, site: stats[i].site, comentario: stats[i].comentario, valid: stats[i].valid  });
-					}
-				} else {
-					quizes[quizes.length-1].comments.push({commentId: stats[i].commentid, nombre: stats[i].nombre, site: stats[i].site, comentario: stats[i].comentario, valid: stats[i].valid  });
-				}
-			}
-
+		models.Quiz.findAll({ include: [{ model: models.Comment }] }).then(function(quizes) {
 			data.quizes = quizes;
-
 			response.render('quizes/list-admin', data);
-
 		}).catch(function(error){next(error)});
 
 	} else {
@@ -56,6 +37,7 @@ exports.index = function(request, response, next){
 	}
 
 }
+
 
 //author
 exports.author = function(request, response){
@@ -113,6 +95,7 @@ exports.quiz = function(request, response){
 				 description: 'Prueba tus conocimientos', 
 				 quiz: request.quiz, 
 				 errors:[],
+				 msg:'',
 				 usuario_sesion: request.session.user,
 				 classMenu: { index:false, quiz: true, author:false, stats: false, doc:false }
 				};
@@ -154,36 +137,25 @@ exports.stadistic = function(request, response, next) {
 			 classMenu: { index:false, quiz: false, author:false, stats: true, doc:false }
 		};
 		
-		var num_quiz = 0;
-		var num_comment = 0;
-		var num_quiz_comment = 0;
-		var num_quiz_comment_counted = 0;
-		var num_quiz_nocomment = 0;
-		var avg_comment_quiz = 0;
+		models.Quiz.findAll({ include: [{ model: models.Comment }] }).then(function(quizes) {
 
-		models.Quiz.stats().then(function(stats) {
+			var num_comment = 0;
+			var num_quiz_comment = 0;
+			var num_quiz_nocomment = 0;
 
-			var quizId = 0;
-
-			for (var i = 0; i < stats.length; i++) {
-				if (quizId != stats[i].quizid){
-					quizId = stats[i].quizid;
-					num_quiz++;
-					if(stats[i].commentid!=null){
-						num_comment++;
-						num_quiz_comment++;
-					} else {
-						num_quiz_nocomment++;
-					}
-				} else {
-					num_comment++;
+			quizes.forEach(function(quiz){
+				if (quiz.comments.length > 0) {
 					num_quiz_comment++;
-				}
-			}
+					num_comment += quiz.comments ? quiz.comments.length : 0;
+			 	} else {
+			 		num_quiz_nocomment++;
+			 	}
+			});
 
-			avg_comment_quiz = (num_comment / num_quiz).toFixed(2);
+			var num_quiz = quizes.length;
+			var avg_comment_quiz = (num_comment / num_quiz).toFixed(2);
 
-			data.stats = {num_quiz:num_quiz,num_comment:num_comment, num_quiz_comment:num_quiz_comment, num_quiz_nocomment:num_quiz_nocomment, avg_comment_quiz:avg_comment_quiz};
+			data.stats = {num_quiz:num_quiz, num_comment:num_comment, num_quiz_comment:num_quiz_comment, num_quiz_nocomment:num_quiz_nocomment, avg_comment_quiz:avg_comment_quiz};
 			response.render('quizes/stadistic', data);
 		});
 	} else {

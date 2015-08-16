@@ -5,22 +5,20 @@
 		</tr>
 	</thead>
 	<tbody>
-
-		<% for (var i = 0; i < quizes.length; i++) { 
-			if(quizes[i]) { %>
+		<% quizes.forEach(function(quiz) { %>
 			<tr>
-				<td><%=quizes[i].quizId%></td><td><%=quizes[i].preguntas%></td><td><%=quizes[i].respuestas%></td><td><%=quizes[i].tematica%> 
+				<td><%=quiz.id%></td><td><%=quiz.preguntas%></td><td><%=quiz.respuestas%></td><td><%=quiz.tematica%> 
 				<td>
-				<% if(quizes[i].comments.length > 0 ) { %>
-					 <a class="show_comments" href="#" > <span>+</span> <%=quizes[i].comments.length%> </a>
+				<% if(quiz.comments.length > 0) { %>
+					 <a class="show_comments" href="#" > <span>+</span> <%=quiz.comments.length%> </a>
 				<%	} %>
 				</td>
-				<td><a href="/quizes/<%=quizes[i].quizId%>" class="glyphicon glyphicon-zoom-in" title="Consultar"></a>
-					<a href="/quizes/<%=quizes[i].quizId%>/update" class="glyphicon glyphicon-edit" title="Eliminar"></a>
-					<a href="/quizes/<%=quizes[i].quizId%>/delete" class="glyphicon glyphicon-remove" title="Modificar"></a>
+				<td><a href="/quizes/<%=quiz.id%>" class="glyphicon glyphicon-search" title="Consultar"></a>
+					<a href="/quizes/<%=quiz.id%>/update" class="glyphicon glyphicon-edit" title="Eliminar"></a>
+					<a href="/quizes/<%=quiz.id%>/delete" class="glyphicon glyphicon-remove" title="Modificar"></a>
 				</td>
 			</tr>	
-			<% if(quizes[i].comments && quizes[i].comments.length>0) { %>
+			<% if(quiz.comments ) { %>
 			<tr class="comments" >
 				<td colspan="6">
 					<table class="table table-hover">
@@ -30,9 +28,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<% for (var j = quizes[i].comments.length - 1; j >= 0; j--) { 
-								var comment = quizes[i].comments[j];
-							%>
+							<% quiz.comments.forEach(function(comment) { %>
 							<tr>
 								<td>
 								<%  if(comment.site) { %>
@@ -42,27 +38,27 @@
 								<%	} %>
 								</td>
 								<td><%=comment.comentario%>
-								<td><a href="/quizes/<%=comment.commentId%>#comentario<%=comment.commentId%>" class="glyphicon glyphicon-search" title="Consultar"></a>
+								<td><a href="/quizes/<%=comment.id%>#comentario<%=comment.id%>" class="glyphicon glyphicon-search" title="Consultar"></a>
 									<%  if(comment.valid) { %>
-										<a href="/comment/<%=comment.commentId%>/valid" class="glyphicon glyphicon-chevron-down" title="Deshabilitar"></a>
+										<a href="/comment/<%=comment.id%>/valid" class="glyphicon glyphicon-chevron-down" title="Deshabilitar"></a>
 									<%	} else { %>
-										<a href="/comment/<%=comment.commentId%>/valid" class="glyphicon glyphicon-ban-circle" title="Habilitar"></a>
+										<a href="/comment/<%=comment.id%>/valid" class="glyphicon glyphicon-ban-circle" title="Habilitar"></a>
 									<%	} %>
-									<a href="/comment/<%=comment.commentId%>/delete" class="glyphicon glyphicon-remove" title="Eliminar"></a>
+									<a href="/comment/<%=comment.id%>/delete" class="glyphicon glyphicon-remove" title="Eliminar"></a>
 								</td>
 							</tr>
-							<%	} %>
+							<%	}); %>
 						</tbody>
 					</table>
 				</td>
 			</tr>	
 			<%	} %>
-		<%	}
-		} %>
-		<tr><td colspan="6">
-		<div class="add">
-			<a href="/quizes/add" class="btn btn-danger">Nueva pregunta</a>
-		</div>
-		</td></tr>
+		<%	}); %>
+			<tr><td colspan="6">
+				<div class="add">
+					<a href="/quizes/add" class="btn btn-danger">Nueva pregunta</a>
+				</div>
+				</td>
+			</tr>
 	</tbody>
 </table>

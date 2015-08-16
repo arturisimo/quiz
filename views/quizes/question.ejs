@@ -8,26 +8,28 @@
 	</form>
 	
 	<%  if(comments.length>0) {
-			for (var i = comments.length - 1; i >= 0; i--) { 
-				if(comments[i].valid) {
-			%>
-				<div class="comentario" id="comentario<%= comments[i].id%>">
+			comments.forEach(function(comment) {
+				if(comment.valid) { 
+					var dateComment = comment.createdAt.getDate() + "/" + comment.createdAt.getMonth() + "/" + comment.createdAt.getFullYear();
+	%>
+
+				<div class="comentario" id="comentario<%= comment.id%>">
 					<legend><strong>
-					<%  if(comments[i].site) { %>
-						<a href="<%= comments[i].site %>"><%= comments[i].nombre %></a>
+					<%  if(comment.site) { %>
+						<a href="<%= comment.site %>"><%= comment.nombre %></a>
 					<%	} else { %>
-						<%  if(comments[i].nombre) { %>
-							<%= comments[i].nombre %>
+						<%  if(comment.nombre!='') { %>
+							<%= comment.nombre %>
 						<%	} else { %>
 							Anónimo
 						<%	} %>
 					<%	} %></strong>...
-					<span class="tematica"><a href="#comentario<%= comments[i].id%>">#<%=comments[i].id%></a> <%= comments[i].createdAt%></span>
+					<span class="tematica"><a href="#comentario<%= comment.id%>">#<%=comment.id%></a> <%= dateComment %></span>
 					</legend>
-					<p><%= comments[i].comentario %></p>
+					<p><%= comment.comentario %></p>
 				</div>
 <%	 			}
-			}
+			});
 		} 
 %>
 
@@ -36,6 +38,9 @@
 		<legend>Añadir un comentario</legend>
 
 		<%- include ../includes/errors.ejs %>
+		<%	if(msg.length > 0){ %> 
+			<div class="alert alert-success"><%=msg%></p></div>
+		<% } %>
 
 		<div class="form-group">
 			<label for="">Nombre</label>

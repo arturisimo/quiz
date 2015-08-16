@@ -17,10 +17,10 @@
 		<label for="">Temática <span>(Obligatorio)</span></label>
 		<select name="tematica" class="form-control">
 		  <option value="" selected>Selecciona una temática...</option>
-		  <% for (var i = temas.length - 1; i >= 0; i--) { 
-		  		var selected = quiz.tematica == temas[i] ? 'selected':''; %>
-				<option <%= selected%> value="<%=temas[i]%>" ><%=temas[i] %></option>
-		  <% } %>		 
+		  <% temas.forEach(function(tema){ %> 
+		  		var selected = quiz.tematica == tema ? 'selected':''; %>
+				<option <%= selected%> value="<%=tema%>" ><%=tema %></option>
+		  <% }); %>		 
 		</select>
 	</div>
 
